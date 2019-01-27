@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--扫描指定包（将带有Component注解的类自动定义为Spring Bean）-->
+    <context:component-scan base-package="com.yang.summerFramework.impl"/>
+
+    <!--切面-->
+    <bean id="greetingAdvisor" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <!--增强-->
+        <property name="advice" ref="greetingAroundAdvice"/>
+        <!--切点-->
+        <property name="pattern" value="com.yang.summerFramework.impl.GreetingImpl.good.*"/>
+    </bean>
+    <!--配置一个代理-->
+    <bean id="greetingProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+
+        <!--目标类-->
+        <property name="target" ref="greetingImpl"/>
+        <!--切面 -->
+        <property name="interceptorNames" value="greetingAdvisor"/>
+        <!--代理目标类（默认为false，也就是代理接口，false时候采用的是JDK动态代理；为true采用CGlib动态代理。此处在未实现某接口的情况下，采用对类的代理，以达到程序运行时实现该接口） -->
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+
+
+</beans>
